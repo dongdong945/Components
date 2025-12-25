@@ -5,13 +5,15 @@ import SwiftUI
 /// App 状态枚举
 ///
 /// 用于管理应用的全局状态流转
-public enum AppState: Sendable {
+public enum AppState: Sendable, CaseIterable, Identifiable {
     /// 启动页
     case splash
     /// 引导页
     case onboarding
     /// 主界面
     case main
+
+    public var id: Self { self }
 }
 
 // MARK: - Environment Key
