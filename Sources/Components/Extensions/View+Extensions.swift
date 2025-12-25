@@ -21,21 +21,3 @@ extension View {
         return renderer.uiImage
     }
 }
-
-// MARK: - UIDevice Extensions
-
-extension UIDevice {
-    /// 设备摇动通知
-    public static let deviceDidShakeNotification = Notification.Name("deviceDidShakeNotification")
-}
-
-// MARK: - UIWindow Extensions
-
-extension UIWindow {
-    /// 监听设备摇动动作
-    override open func motionEnded(_ motion: UIEvent.EventSubtype, with _: UIEvent?) {
-        if motion == .motionShake {
-            NotificationCenter.default.post(name: UIDevice.deviceDidShakeNotification, object: nil)
-        }
-    }
-}

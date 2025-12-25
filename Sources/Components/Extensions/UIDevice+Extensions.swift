@@ -37,4 +37,7 @@ extension UIDevice {
 
         return countryName ?? "US"
     }
+
+    /// 设备摇动通知
+    public static let deviceDidShakeNotification = Notification.Name("deviceDidShakeNotification")
 }
