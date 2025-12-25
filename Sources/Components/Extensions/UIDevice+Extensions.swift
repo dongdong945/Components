@@ -27,8 +27,7 @@ extension UIDevice {
     public var country: String {
         // 首先尝试从当前 region 获取国家名称
         if let regionCode = Locale.current.region?.identifier,
-           let countryName = Locale(identifier: "en_US").localizedString(forRegionCode: regionCode)
-        {
+           let countryName = Locale(identifier: "en_US").localizedString(forRegionCode: regionCode) {
             return countryName
         }
 

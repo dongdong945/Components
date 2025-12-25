@@ -33,7 +33,7 @@ extension UIDevice {
 
 extension UIWindow {
     /// 监听设备摇动动作
-    override open func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+    override open func motionEnded(_ motion: UIEvent.EventSubtype, with _: UIEvent?) {
         if motion == .motionShake {
             NotificationCenter.default.post(name: UIDevice.deviceDidShakeNotification, object: nil)
         }
