@@ -109,8 +109,8 @@ public struct ToastAppearance: Sendable {
     /// 默认样式（黑底白字）
     public static let `default` = ToastAppearance(
         titleFont: .body,
-        titleColor: Color(uiColor: .systemBackground),
-        backgroundColor: Color(uiColor: .label).opacity(0.7),
+        titleColor: Color(uiColor: .white),
+        backgroundColor: Color(uiColor: .black).opacity(0.7),
         cornerRadius: 12
     )
 
