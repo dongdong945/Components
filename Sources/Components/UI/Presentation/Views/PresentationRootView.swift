@@ -12,7 +12,8 @@ import SwiftUI
 /// 在 ContentView 上方叠加一个透明层，用于承载根级别的 Sheet 和 FullScreenCover
 public struct PresentationRootView<ViewMapper: PresentationViewMapping>: View {
     /// Presentation 助手
-    @Bindable public var helper: PresentationHelper
+    @Bindable
+    public var helper: PresentationHelper
 
     /// 视图映射器
     public let viewMapper: ViewMapper

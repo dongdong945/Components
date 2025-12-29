@@ -26,7 +26,7 @@ public final class PresentationHelper: PresentationPresenting {
     /// - Parameters:
     ///   - viewType: 视图类型（必须是 Hashable）
     ///   - style: 展示样式
-    public func present<T: Hashable>(_ viewType: T, as style: PresentationStyle) {
+    public func present(_ viewType: some Hashable, as style: PresentationStyle) {
         let item = PresentationItem(viewType: AnyHashable(viewType), style: style)
         present(item)
     }

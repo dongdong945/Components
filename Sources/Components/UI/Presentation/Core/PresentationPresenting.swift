@@ -44,7 +44,7 @@ public struct PresentationItem: Identifiable {
     public init(viewType: AnyHashable, style: PresentationStyle) {
         self.viewType = viewType
         self.style = style
-        self.id = "\(viewType)_\(style == .sheet ? "sheet" : "cover")"
+        id = "\(viewType)_\(style == .sheet ? "sheet" : "cover")"
     }
 }
 
