@@ -32,4 +32,9 @@ extension View {
     ) -> some View {
         modifier(GradientForegroundModifier(stops: stops, startPoint: startPoint, endPoint: endPoint))
     }
+
+    /// 为视图添加自定义背景（图片 + 颜色填充）
+    public func customBackground(image: ImageResource, color: Color) -> some View {
+        modifier(CustomBackgroundModifier(imageResource: image, color: color))
+    }
 }
