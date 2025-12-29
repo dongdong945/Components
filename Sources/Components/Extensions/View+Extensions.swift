@@ -20,4 +20,16 @@ extension View {
         renderer.scale = UIScreen.main.scale
         return renderer.uiImage
     }
+
+    /// 为视图添加渐变前景色
+    public func gradientForeground(
+        stops: [Gradient.Stop] = [
+            Gradient.Stop(color: Color.white.opacity(0.5), location: 0.00),
+            Gradient.Stop(color: Color.white, location: 1.00)
+        ],
+        startPoint: UnitPoint = UnitPoint(x: 0, y: 0.5),
+        endPoint: UnitPoint = UnitPoint(x: 1, y: 0.5)
+    ) -> some View {
+        modifier(GradientForegroundModifier(stops: stops, startPoint: startPoint, endPoint: endPoint))
+    }
 }
