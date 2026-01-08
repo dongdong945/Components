@@ -1,3 +1,9 @@
+//
+//  UIFont+Extensions.swift
+//  Components
+//
+//  Created by DongDong on 01/08/26.
+//
 import UIKit
 
 // MARK: - UIFont.Weight Extensions
@@ -46,7 +52,7 @@ extension UIFont {
             return UIFont(name: name, size: size) ?? .systemFont(ofSize: size, weight: weight)
         } else {
             #if DEBUG
-                assertionFailure("字体 '\(name)' 不可用，请检查字体文件是否正确添加到项目中")
+                assertionFailure("Font '\(name)' is unavailable. Please ensure the font file is included in the project.")
             #endif
             return .systemFont(ofSize: size, weight: weight)
         }

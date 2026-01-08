@@ -2,9 +2,8 @@
 //  GradientForegroundModifier.swift
 //  Components
 //
-//  Created by DongDong on 2025-12-29.
+//  Created by DongDong on 01/08/26.
 //
-
 import SwiftUI
 
 /// 渐变前景色修饰符

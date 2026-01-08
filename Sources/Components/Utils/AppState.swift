@@ -1,3 +1,9 @@
+//
+//  AppState.swift
+//  Components
+//
+//  Created by DongDong on 01/08/26.
+//
 import SwiftUI
 
 // MARK: - App State

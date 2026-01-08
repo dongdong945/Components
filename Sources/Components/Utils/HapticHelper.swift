@@ -2,9 +2,8 @@
 //  HapticHelper.swift
 //  Components
 //
-//  Created by DongDong on 12/30/25.
+//  Created by DongDong on 01/08/26.
 //
-
 import SwiftUI
 import UIKit
 
@@ -42,7 +41,7 @@ import UIKit
 ///     @Environment(HapticHelper.self) private var haptic
 ///
 ///     var body: some View {
-///         Button("点击") {
+///         Button("Tap") {
 ///             haptic.medium()
 ///         }
 ///     }

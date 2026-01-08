@@ -1,3 +1,9 @@
+//
+//  AppLogger.swift
+//  Components
+//
+//  Created by DongDong on 01/08/26.
+//
 import Foundation
 import OSLog
 
@@ -18,7 +24,7 @@ public final class AppLogger: Sendable {
     /// - Parameters:
     ///   - subsystem: 子系统标识，默认使用应用名称
     ///   - category: 日志分类
-    public init(subsystem: String = Bundle.main.bundleIdentifier ?? "Components", category: String) {
+    public init(subsystem: String = "App", category: String) {
         logger = Logger(subsystem: subsystem, category: category)
     }
 

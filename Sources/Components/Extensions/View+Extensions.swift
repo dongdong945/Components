@@ -1,3 +1,9 @@
+//
+//  View+Extensions.swift
+//  Components
+//
+//  Created by DongDong on 01/08/26.
+//
 import SwiftUI
 
 // MARK: - View Extensions
@@ -33,8 +39,19 @@ extension View {
         modifier(GradientForegroundModifier(stops: stops, startPoint: startPoint, endPoint: endPoint))
     }
 
-    /// 为视图添加自定义背景（图片 + 颜色填充）
-    public func customBackground(image: ImageResource, color: Color) -> some View {
-        modifier(CustomBackgroundModifier(imageResource: image, color: color))
+    /// 添加自定义图片背景
+    /// - Parameters:
+    ///   - image: 背景图片资源
+    ///   - color: 填充颜色
+    public func customImageBackground(image: ImageResource, color: Color = .black) -> some View {
+        modifier(CustomImageBackgroundModifier(image: image, fillColor: color))
+    }
+
+    /// 添加自定义视频背景
+    /// - Parameters:
+    ///   - video: 视频文件名（不含扩展名）
+    ///   - fillColor: 填充颜色
+    public func customVideoBackground(video: String, fillColor: Color = .black) -> some View {
+        modifier(CustomVideoBackgroundModifier(videoName: video, fillColor: fillColor))
     }
 }

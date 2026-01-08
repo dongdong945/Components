@@ -1,3 +1,9 @@
+//
+//  Bundle+Extensions.swift
+//  Components
+//
+//  Created by DongDong on 01/08/26.
+//
 import Foundation
 
 // MARK: - Bundle Extensions
@@ -17,5 +23,14 @@ extension Bundle {
     public var appDisplayName: String {
         infoDictionary?["CFBundleDisplayName"] as? String ??
             infoDictionary?["CFBundleName"] as? String ?? "App"
+    }
+
+    /// 获取主应用Bundle，适用于主app和extension
+    public static var appBundle: Bundle {
+        var bundleURL = Bundle.main.bundleURL
+        while bundleURL.pathExtension != "app", bundleURL.path != "/" {
+            bundleURL = bundleURL.deletingLastPathComponent()
+        }
+        return Bundle(url: bundleURL) ?? Bundle.main
     }
 }

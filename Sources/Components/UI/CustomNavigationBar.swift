@@ -2,9 +2,8 @@
 //  CustomNavigationBar.swift
 //  Components
 //
-//  Created by DongDong on 2025-12-29.
+//  Created by DongDong on 01/08/26.
 //
-
 import SwiftUI
 
 // MARK: - Configuration
@@ -176,7 +175,7 @@ extension View {
     ///     // 内容...
     /// }
     /// .customNavigationBar(
-    ///     title: { Text("设置") },
+    ///     title: { Text("Settings") },
     ///     leading: {
     ///         Button(action: { }) {
     ///             Image(systemName: "chevron.left")

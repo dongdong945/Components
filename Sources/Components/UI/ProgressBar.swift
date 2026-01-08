@@ -2,9 +2,8 @@
 //  ProgressBar.swift
 //  Components
 //
-//  Created by DongDong on 2025-12-30.
+//  Created by DongDong on 01/08/26.
 //
-
 import SwiftUI
 
 // MARK: - Style Enum
@@ -190,11 +189,11 @@ public struct ProgressBar: View {
 
 // MARK: - Preview
 
-#Preview("基础用法") {
+#Preview("Basic Usage") {
     VStack(spacing: 30) {
         // 最简单用法
         VStack(alignment: .leading, spacing: 8) {
-            Text("简单进度条（默认样式）")
+            Text("Simple progress bar (default style)")
                 .font(.caption)
                 .foregroundColor(.secondary)
             ProgressBar(progress: 0.3)
@@ -203,7 +202,7 @@ public struct ProgressBar: View {
 
         // 自定义颜色和宽度
         VStack(alignment: .leading, spacing: 8) {
-            Text("自定义颜色和宽度")
+            Text("Custom colors & width")
                 .font(.caption)
                 .foregroundColor(.secondary)
             ProgressBar(
@@ -216,7 +215,7 @@ public struct ProgressBar: View {
 
         // 圆形进度条
         VStack(alignment: .leading, spacing: 8) {
-            Text("圆形进度条")
+            Text("Circular progress bar")
                 .font(.caption)
                 .foregroundColor(.secondary)
             ProgressBar(
@@ -231,11 +230,11 @@ public struct ProgressBar: View {
     .padding()
 }
 
-#Preview("高级用法") {
+#Preview("Advanced Usage") {
     VStack(spacing: 30) {
         // 渐变主题
         VStack(alignment: .leading, spacing: 8) {
-            Text("渐变主题（红色到橙色）")
+            Text("Gradient theme (red to orange)")
                 .font(.caption)
                 .foregroundColor(.secondary)
             ProgressBar(
@@ -249,7 +248,7 @@ public struct ProgressBar: View {
 
         // 自定义动画时长
         VStack(alignment: .leading, spacing: 8) {
-            Text("自定义动画时长（慢速动画：2秒）")
+            Text("Custom animation duration (slow: 2s)")
                 .font(.caption)
                 .foregroundColor(.secondary)
             ProgressBar(
@@ -263,7 +262,7 @@ public struct ProgressBar: View {
 
         // 无动画
         VStack(alignment: .leading, spacing: 8) {
-            Text("无动画进度条")
+            Text("No animation")
                 .font(.caption)
                 .foregroundColor(.secondary)
             ProgressBar(
@@ -276,7 +275,7 @@ public struct ProgressBar: View {
 
         // 直角端点
         VStack(alignment: .leading, spacing: 8) {
-            Text("直角端点（非圆角）")
+            Text("Square line caps")
                 .font(.caption)
                 .foregroundColor(.secondary)
             ProgressBar(
@@ -290,7 +289,7 @@ public struct ProgressBar: View {
     .padding()
 }
 
-#Preview("实际场景") {
+#Preview("Real World") {
     /// Onboarding 进度示例
     struct OnboardingProgressDemo: View {
         @State
@@ -318,7 +317,7 @@ public struct ProgressBar: View {
                 .frame(height: 4)
 
                 HStack {
-                    Button("上一步") {
+                    Button("Previous") {
                         if currentStep > 1 {
                             currentStep -= 1
                         }
@@ -327,7 +326,7 @@ public struct ProgressBar: View {
 
                     Spacer()
 
-                    Button("下一步") {
+                    Button("Next") {
                         if currentStep < totalSteps {
                             currentStep += 1
                         }

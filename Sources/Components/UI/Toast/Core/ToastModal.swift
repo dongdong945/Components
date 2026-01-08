@@ -2,9 +2,8 @@
 //  ToastModal.swift
 //  Components
 //
-//  Created by DongDong on 12/26/25.
+//  Created by DongDong on 01/08/26.
 //
-
 import SwiftUI
 
 /// Toast 模态展示器

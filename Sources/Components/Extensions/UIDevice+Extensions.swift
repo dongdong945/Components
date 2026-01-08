@@ -1,3 +1,9 @@
+//
+//  UIDevice+Extensions.swift
+//  Components
+//
+//  Created by DongDong on 01/08/26.
+//
 import UIKit
 
 // MARK: - UIDevice Extensions
