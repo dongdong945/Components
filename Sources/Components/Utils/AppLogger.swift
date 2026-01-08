@@ -24,7 +24,7 @@ public final class AppLogger: Sendable {
     /// - Parameters:
     ///   - subsystem: 子系统标识，默认使用应用名称
     ///   - category: 日志分类
-    public init(subsystem: String = "App", category: String) {
+    public init(subsystem: String = Bundle.main.appDisplayName, category: String) {
         logger = Logger(subsystem: subsystem, category: category)
     }
 
