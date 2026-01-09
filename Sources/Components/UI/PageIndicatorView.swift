@@ -12,17 +12,23 @@ public struct PageIndicatorView: View {
     public let currentPage: Int
     public let selectedColor: Color
     public let normalColor: Color
+    public let selectedSize: CGSize
+    public let normalSize: CGSize
 
     public init(
         totalPages: Int,
         currentPage: Int,
         selectedColor: Color = .accentColor,
-        normalColor: Color = Color.white.opacity(0.08)
+        normalColor: Color = Color.white.opacity(0.08),
+        selectedSize: CGSize = CGSize(width: 12, height: 8),
+        normalSize: CGSize = CGSize(width: 8, height: 8)
     ) {
         self.totalPages = totalPages
         self.currentPage = currentPage
         self.selectedColor = selectedColor
         self.normalColor = normalColor
+        self.selectedSize = selectedSize
+        self.normalSize = normalSize
     }
 
     public var body: some View {
@@ -30,11 +36,11 @@ public struct PageIndicatorView: View {
             ForEach(0 ..< totalPages, id: \.self) { index in
                 if currentPage == index {
                     selectedColor
-                        .frame(width: 12, height: 8)
+                        .frame(width: selectedSize.width, height: selectedSize.height)
                         .clipShape(Capsule())
                 } else {
                     normalColor
-                        .frame(width: 8, height: 8)
+                        .frame(width: normalSize.width, height: normalSize.height)
                         .clipShape(Circle())
                 }
             }
