@@ -33,33 +33,34 @@ public struct CustomNavigationBarConfig: Sendable {
     /// 滚动后背景透明度
     public var scrolledBackgroundOpacity: CGFloat
 
-    public init(
-        titleFont: Font? = nil,
-        titleColor: Color? = nil,
-        backgroundColors: [Color] = [Color(.systemBackground)],
-        height: CGFloat = 44,
-        transitionThreshold: CGFloat? = 120,
-        initialBackgroundOpacity: CGFloat = 0,
-        scrolledBackgroundOpacity: CGFloat = 1
-    ) {
-        self.titleFont = titleFont ?? .lexendDeca(.medium, fontSize: 20)
-        self.titleColor = titleColor ?? Color("#F2F2F2")
-        self.backgroundColors = backgroundColors
-        self.height = height
-        self.transitionThreshold = transitionThreshold ?? height
-        self.initialBackgroundOpacity = initialBackgroundOpacity
-        self.scrolledBackgroundOpacity = scrolledBackgroundOpacity
-    }
+	    public init(
+	        titleFont: Font? = nil,
+	        titleColor: Color? = nil,
+	        backgroundColors: [Color] = [Color(.systemBackground)],
+	        height: CGFloat = 44,
+	        transitionThreshold: CGFloat? = 120,
+	        initialBackgroundOpacity: CGFloat = 0,
+	        scrolledBackgroundOpacity: CGFloat = 1
+	    ) {
+	        self.titleFont = titleFont ?? .system(size: 20, weight: .medium)
+	        self.titleColor = titleColor ?? Color("#F2F2F2")
+	        self.backgroundColors = backgroundColors
+	        self.height = height
+	        self.transitionThreshold = transitionThreshold ?? height
+	        self.initialBackgroundOpacity = initialBackgroundOpacity
+	        self.scrolledBackgroundOpacity = scrolledBackgroundOpacity
+	    }
 
-    /// 默认配置
-    public static let `default` = CustomNavigationBarConfig(
-        backgroundColors: [
-            Color("#1A1A1A"),
-            Color("#1A1A1A"),
-            Color("#1A1A1A").opacity(0)
-        ]
-    )
-}
+	    /// 默认配置
+	    @MainActor
+	    public static var `default` = CustomNavigationBarConfig(
+	        backgroundColors: [
+	            Color("#1A1A1A"),
+	            Color("#1A1A1A"),
+	            Color("#1A1A1A").opacity(0)
+	        ]
+	    )
+	}
 
 // MARK: - Modifier
 
