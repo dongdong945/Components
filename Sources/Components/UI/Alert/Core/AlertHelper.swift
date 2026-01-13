@@ -35,7 +35,7 @@ public final class AlertHelper {
     ///   - title: 标题
     ///   - message: 描述
     ///   - actions: 按钮列表
-    public func show(_ title: String, message: String? = nil, actions: [AlertAction]) {
+    public func show(_ title: String?, message: String? = nil, actions: [AlertAction]) {
         let config = AlertConfiguration(title: title, message: message, actions: actions)
         presenter?.present(config: config)
     }
@@ -44,14 +44,14 @@ public final class AlertHelper {
     /// - Parameters:
     ///   - title: 标题
     ///   - message: 描述
-    public func show(_ title: String, message: String) {
+    public func show(_ title: String?, message: String) {
         let config = AlertConfiguration(title: title, message: message)
         presenter?.present(config: config)
     }
 
     /// 展示 Alert（仅标题）
     /// - Parameter title: 标题
-    public func show(_ title: String) {
+    public func show(_ title: String?) {
         let config = AlertConfiguration(title: title)
         presenter?.present(config: config)
     }
@@ -66,7 +66,7 @@ public final class AlertHelper {
     ///   - cancelTitle: 取消按钮标题
     ///   - onConfirm: 确认回调
     public func showConfirm(
-        _ title: String,
+        _ title: String?,
         message: String? = nil,
         confirmTitle: String = "Confirm",
         cancelTitle: String = "Cancel",
@@ -87,7 +87,7 @@ public final class AlertHelper {
     ///   - cancelTitle: 取消按钮标题
     ///   - onDestruct: 破坏性操作回调
     public func showDestructive(
-        _ title: String,
+        _ title: String?,
         message: String? = nil,
         destructiveTitle: String = "Delete",
         cancelTitle: String = "Cancel",

@@ -41,7 +41,7 @@ public struct AlertAction: Identifiable {
 /// Alert 配置数据模型
 public struct AlertConfiguration {
     /// 标题
-    public let title: String
+    public let title: String?
     /// 描述信息
     public let message: String?
     /// 按钮列表
@@ -51,8 +51,8 @@ public struct AlertConfiguration {
     /// - Parameters:
     ///   - title: 标题
     ///   - message: 描述信息
-    ///   - actions: 按钮列表，默认提供“确定”
-    public init(title: String, message: String? = nil, actions: [AlertAction] = []) {
+    ///   - actions: 按钮列表，默认提供"确定"
+    public init(title: String? = nil, message: String? = nil, actions: [AlertAction] = []) {
         self.title = title
         self.message = message
         self.actions = actions.isEmpty ? [.defaultOK()] : actions
