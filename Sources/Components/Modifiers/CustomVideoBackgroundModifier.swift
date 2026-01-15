@@ -70,7 +70,7 @@ private struct VideoPlayerView: UIViewRepresentable {
         Coordinator()
     }
 
-    final class Coordinator: NSObject {
+    final class Coordinator: NSObject, @unchecked Sendable {
         var player: AVPlayer?
         var playerView: PlayerView?
         private var observer: NSKeyValueObservation?
@@ -81,11 +81,14 @@ private struct VideoPlayerView: UIViewRepresentable {
 
             observer = player.observe(\.currentItem?.status, options: [.new]) { [weak self] player, _ in
                 guard let self,
-                      let playerView,
                       let item = player.currentItem,
                       item.status == .readyToPlay
                 else { return }
 
+                // 提取需要的引用，避免在闭包中捕获 self
+                guard let playerView = self.playerView else { return }
+
+                // 切换到主线程执行 UI 操作
                 DispatchQueue.main.async {
                     UIView.animate(withDuration: 0.3) {
                         playerView.alpha = 1.0
@@ -93,8 +96,8 @@ private struct VideoPlayerView: UIViewRepresentable {
                     player.play()
                 }
 
-                observer?.invalidate()
-                observer = nil
+                self.observer?.invalidate()
+                self.observer = nil
             }
         }
 
