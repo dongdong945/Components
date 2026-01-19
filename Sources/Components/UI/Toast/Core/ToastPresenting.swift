@@ -92,32 +92,34 @@ public struct ToastAppearance: Sendable {
     public let backgroundColor: Color
     /// 圆角半径
     public let cornerRadius: CGFloat
+    /// Toast 图标
+    public let icon: ImageResource?
+    /// 渐变颜色
+    public let gradientColor: Color?
 
     public init(
         titleFont: Font,
         titleColor: Color,
         backgroundColor: Color,
-        cornerRadius: CGFloat
+        cornerRadius: CGFloat,
+        icon: ImageResource? = nil,
+        gradientColor: Color? = nil
     ) {
         self.titleFont = titleFont
         self.titleColor = titleColor
         self.backgroundColor = backgroundColor
         self.cornerRadius = cornerRadius
+        self.icon = icon
+        self.gradientColor = gradientColor
     }
 
-    /// 默认样式（黑底白字）
+    /// 默认样式（黑底白字，无图标）
     public static let `default` = ToastAppearance(
         titleFont: .body,
         titleColor: Color(uiColor: .white),
         backgroundColor: Color(uiColor: .black).opacity(0.7),
-        cornerRadius: 12
-    )
-
-    /// Custom 样式的基础外观
-    public static let custom = ToastAppearance(
-        titleFont: .system(size: 15, weight: .regular),
-        titleColor: .white,
-        backgroundColor: .black.opacity(0.7),
-        cornerRadius: 8
+        cornerRadius: 12,
+        icon: nil,
+        gradientColor: nil
     )
 }
