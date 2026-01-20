@@ -12,10 +12,21 @@ public struct CustomImageBackgroundModifier: ViewModifier {
     public let image: ImageResource
     /// 背景填充色
     public let fillColor: Color
+    /// 内容缩放模式
+    public let contentMode: ContentMode
+    /// 对齐方式
+    public let alignment: Alignment
 
-    public init(image: ImageResource, fillColor: Color = .black) {
+    public init(
+        image: ImageResource,
+        fillColor: Color = .black,
+        contentMode: ContentMode = .fit,
+        alignment: Alignment = .top
+    ) {
         self.image = image
         self.fillColor = fillColor
+        self.contentMode = contentMode
+        self.alignment = alignment
     }
 
     public func body(content: Content) -> some View {
@@ -28,8 +39,12 @@ public struct CustomImageBackgroundModifier: ViewModifier {
                         .overlay {
                             Image(image)
                                 .resizable()
-                                .scaledToFit()
-                                .frame(width: geometry.size.width, height: geometry.size.height)
+                                .aspectRatio(contentMode: contentMode)
+                                .frame(
+                                    width: geometry.size.width,
+                                    height: geometry.size.height,
+                                    alignment: alignment
+                                )
                                 .ignoresSafeArea()
                         }
                 }
