@@ -8,56 +8,35 @@ import AVFoundation
 import SwiftUI
 import UIKit
 
-/// 视频背景修饰符：铺满画布的本地 mp4 视频 + 填充色
+/// 视频背景修饰符：宽度填充、顶部对齐、底部超出裁剪
 public struct CustomVideoBackgroundModifier: ViewModifier {
     /// 视频文件名（不含扩展名）
     public let videoName: String
     /// 背景填充色
     public let fillColor: Color
-    /// 内容缩放模式
-    public let contentMode: ContentMode
-    /// 对齐方式
-    public let alignment: Alignment
 
     public init(
         videoName: String,
-        fillColor: Color = .black,
-        contentMode: ContentMode = .fit,
-        alignment: Alignment = .top
+        fillColor: Color = .black
     ) {
         self.videoName = videoName
         self.fillColor = fillColor
-        self.contentMode = contentMode
-        self.alignment = alignment
     }
 
     public func body(content: Content) -> some View {
-        let videoGravity = contentModeToVideoGravity(contentMode)
-
         content
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {
                 GeometryReader { geometry in
                     fillColor
                         .ignoresSafeArea()
-                        .overlay {
-                            VideoPlayerView(videoName: videoName, videoGravity: videoGravity, alignment: alignment)
-                                .frame(width: geometry.size.width, height: geometry.size.height)
+                        .overlay(alignment: .top) {
+                            VideoPlayerView(videoName: videoName, containerWidth: geometry.size.width)
                                 .ignoresSafeArea()
                         }
                 }
                 .ignoresSafeArea()
             }
-    }
-
-    /// 将 SwiftUI ContentMode 转换为 AVLayerVideoGravity
-    private func contentModeToVideoGravity(_ mode: ContentMode) -> AVLayerVideoGravity {
-        switch mode {
-        case .fit:
-            return .resizeAspect
-        case .fill:
-            return .resizeAspectFill
-        }
     }
 }
 
@@ -65,13 +44,11 @@ public struct CustomVideoBackgroundModifier: ViewModifier {
 
 private struct VideoPlayerView: UIViewRepresentable {
     let videoName: String
-    let videoGravity: AVLayerVideoGravity
-    let alignment: Alignment
+    let containerWidth: CGFloat
 
     func makeUIView(context: Context) -> PlayerView {
         let playerView = PlayerView()
-        playerView.videoGravity = videoGravity
-        playerView.videoAlignment = alignment
+        playerView.containerWidth = containerWidth
 
         guard let url = Bundle.main.url(forResource: videoName, withExtension: "mp4") else {
             return playerView
@@ -79,7 +56,7 @@ private struct VideoPlayerView: UIViewRepresentable {
 
         let player = AVPlayer(url: url)
         playerView.playerLayer.player = player
-        playerView.playerLayer.videoGravity = .resize // 使用 resize，手动控制 layer frame
+        playerView.playerLayer.videoGravity = .resize
         playerView.alpha = 0
 
         context.coordinator.player = player
@@ -90,9 +67,7 @@ private struct VideoPlayerView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: PlayerView, context: Context) {
-        // 更新对齐方式（如果需要支持动态修改）
-        uiView.videoGravity = videoGravity
-        uiView.videoAlignment = alignment
+        uiView.containerWidth = containerWidth
         uiView.updatePlayerLayerFrame()
     }
 
@@ -105,7 +80,6 @@ private struct VideoPlayerView: UIViewRepresentable {
         var playerView: PlayerView?
         private var observer: NSKeyValueObservation?
 
-        /// 监听视频准备状态并启动播放
         func observePlayerReadiness() {
             guard let player else { return }
 
@@ -115,12 +89,9 @@ private struct VideoPlayerView: UIViewRepresentable {
                       item.status == .readyToPlay
                 else { return }
 
-                // 提取需要的引用，避免在闭包中捕获 self
                 guard let playerView = self.playerView else { return }
 
-                // 切换到主线程执行 UI 操作
                 DispatchQueue.main.async {
-                    // 视频准备好后，更新 layer frame（确保使用正确的视频尺寸）
                     playerView.updatePlayerLayerFrame()
 
                     UIView.animate(withDuration: 0.3) {
@@ -146,8 +117,7 @@ private struct VideoPlayerView: UIViewRepresentable {
 /// UIView 容器，包含 AVPlayerLayer sublayer
 private final class PlayerView: UIView {
     let playerLayer = AVPlayerLayer()
-    var videoGravity: AVLayerVideoGravity = .resizeAspect
-    var videoAlignment: Alignment = .center
+    var containerWidth: CGFloat = 0
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -164,80 +134,29 @@ private final class PlayerView: UIView {
         updatePlayerLayerFrame()
     }
 
-    /// 根据视频尺寸和对齐方式更新 playerLayer 的 frame
+    /// 宽度填充模式：宽度 = 容器宽度，高度按比例计算，顶部对齐
     func updatePlayerLayerFrame() {
         guard let videoSize = playerLayer.player?.currentItem?.presentationSize,
               videoSize.width > 0, videoSize.height > 0 else {
-            // 视频尚未加载，使用全屏
             playerLayer.frame = bounds
             return
         }
 
-        let containerSize = bounds.size
         let videoAspectRatio = videoSize.width / videoSize.height
-        let containerAspectRatio = containerSize.width / containerSize.height
+        let scaledHeight = containerWidth / videoAspectRatio
 
-        var layerFrame: CGRect
-
-        switch videoGravity {
-        case .resizeAspect:
-            // 保持宽高比，完整显示视频
-            if videoAspectRatio > containerAspectRatio {
-                // 视频更宽，以宽度为准
-                let height = containerSize.width / videoAspectRatio
-                layerFrame = CGRect(x: 0, y: 0, width: containerSize.width, height: height)
-            } else {
-                // 视频更高，以高度为准
-                let width = containerSize.height * videoAspectRatio
-                layerFrame = CGRect(x: 0, y: 0, width: width, height: containerSize.height)
-            }
-
-        case .resizeAspectFill:
-            // 保持宽高比，填充整个容器
-            if videoAspectRatio > containerAspectRatio {
-                // 视频更宽，以高度为准
-                let width = containerSize.height * videoAspectRatio
-                layerFrame = CGRect(x: 0, y: 0, width: width, height: containerSize.height)
-            } else {
-                // 视频更高，以宽度为准
-                let height = containerSize.width / videoAspectRatio
-                layerFrame = CGRect(x: 0, y: 0, width: containerSize.width, height: height)
-            }
-
-        default:
-            // .resize - 拉伸填充
-            layerFrame = bounds
-        }
-
-        // 根据 alignment 调整位置
-        layerFrame = alignFrame(layerFrame, in: bounds, alignment: videoAlignment)
-        playerLayer.frame = layerFrame
+        // 宽度填充、顶部对齐
+        playerLayer.frame = CGRect(x: 0, y: 0, width: containerWidth, height: scaledHeight)
     }
 
-    /// 根据对齐方式调整 frame 位置
-    private func alignFrame(_ frame: CGRect, in container: CGRect, alignment: Alignment) -> CGRect {
-        var alignedFrame = frame
-
-        // 水平对齐
-        switch alignment.horizontal {
-        case .leading:
-            alignedFrame.origin.x = 0
-        case .trailing:
-            alignedFrame.origin.x = container.width - frame.width
-        default: // .center
-            alignedFrame.origin.x = (container.width - frame.width) / 2
+    override var intrinsicContentSize: CGSize {
+        guard let videoSize = playerLayer.player?.currentItem?.presentationSize,
+              videoSize.width > 0, videoSize.height > 0 else {
+            return CGSize(width: containerWidth, height: UIView.noIntrinsicMetric)
         }
 
-        // 垂直对齐
-        switch alignment.vertical {
-        case .top:
-            alignedFrame.origin.y = 0
-        case .bottom:
-            alignedFrame.origin.y = container.height - frame.height
-        default: // .center
-            alignedFrame.origin.y = (container.height - frame.height) / 2
-        }
-
-        return alignedFrame
+        let videoAspectRatio = videoSize.width / videoSize.height
+        let scaledHeight = containerWidth / videoAspectRatio
+        return CGSize(width: containerWidth, height: scaledHeight)
     }
 }

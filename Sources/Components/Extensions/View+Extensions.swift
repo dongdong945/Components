@@ -40,43 +40,31 @@ extension View {
         modifier(GradientForegroundModifier(stops: stops, startPoint: startPoint, endPoint: endPoint))
     }
 
-    /// 添加自定义图片背景
+    /// 添加自定义图片背景（宽度填充、顶部对齐）
     /// - Parameters:
     ///   - image: 背景图片资源
     ///   - fillColor: 填充颜色
-    ///   - contentMode: 内容缩放模式（.fit 或 .fill）
-    ///   - alignment: 对齐方式（.top, .center, .bottom 等）
     public func customImageBackground(
         image: ImageResource,
-        fillColor: Color = .black,
-        contentMode: ContentMode = .fit,
-        alignment: Alignment = .top
+        fillColor: Color = .black
     ) -> some View {
         modifier(CustomImageBackgroundModifier(
             image: image,
-            fillColor: fillColor,
-            contentMode: contentMode,
-            alignment: alignment
+            fillColor: fillColor
         ))
     }
 
-    /// 添加自定义视频背景
+    /// 添加自定义视频背景（宽度填充、顶部对齐）
     /// - Parameters:
     ///   - video: 视频文件名（不含扩展名）
     ///   - fillColor: 填充颜色
-    ///   - contentMode: 内容缩放模式（.fit 或 .fill）
-    ///   - alignment: 对齐方式（.top, .center, .bottom 等）
     public func customVideoBackground(
         video: String,
-        fillColor: Color = .black,
-        contentMode: ContentMode = .fit,
-        alignment: Alignment = .top
+        fillColor: Color = .black
     ) -> some View {
         modifier(CustomVideoBackgroundModifier(
             videoName: video,
-            fillColor: fillColor,
-            contentMode: contentMode,
-            alignment: alignment
+            fillColor: fillColor
         ))
     }
 }
