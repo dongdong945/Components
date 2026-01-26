@@ -20,6 +20,8 @@ public struct CustomNavigationBarConfig: Sendable {
     public var backgroundColors: [Color]
     /// 导航栏高度
     public var height: CGFloat
+    /// 导航栏水平内边距
+    public var horizontalPadding: CGFloat
     /// 背景透明度变化的滚动阈值（默认与 height 相同）
     public var transitionThreshold: CGFloat
 
@@ -38,6 +40,7 @@ public struct CustomNavigationBarConfig: Sendable {
 	        titleColor: Color? = nil,
 	        backgroundColors: [Color] = [Color(.systemBackground)],
 	        height: CGFloat = 44,
+	        horizontalPadding: CGFloat = 6,
 	        transitionThreshold: CGFloat? = 120,
 	        initialBackgroundOpacity: CGFloat = 0,
 	        scrolledBackgroundOpacity: CGFloat = 1
@@ -46,6 +49,7 @@ public struct CustomNavigationBarConfig: Sendable {
 	        self.titleColor = titleColor ?? Color("#F2F2F2")
 	        self.backgroundColors = backgroundColors
 	        self.height = height
+	        self.horizontalPadding = horizontalPadding
 	        self.transitionThreshold = transitionThreshold ?? height
 	        self.initialBackgroundOpacity = initialBackgroundOpacity
 	        self.scrolledBackgroundOpacity = scrolledBackgroundOpacity
@@ -158,7 +162,7 @@ struct CustomNavigationBarModifier<LeadingView: View, TitleView: View, TrailingV
                     }
                 }
                 .frame(height: config.height)
-                .padding(.horizontal, 6)
+                .padding(.horizontal, config.horizontalPadding)
             }
         }
         .frame(height: config.height)
