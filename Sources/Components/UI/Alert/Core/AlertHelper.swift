@@ -35,8 +35,19 @@ public final class AlertHelper {
     ///   - title: 标题
     ///   - message: 描述
     ///   - actions: 按钮列表
-    public func show(_ title: String?, message: String? = nil, actions: [AlertAction]) {
-        let config = AlertConfiguration(title: title, message: message, actions: actions)
+    ///   - appearance: 外观配置
+    public func show(
+        _ title: String?,
+        message: String? = nil,
+        actions: [AlertAction],
+        appearance: AlertAppearance? = nil
+    ) {
+        let config = AlertConfiguration(
+            title: title,
+            message: message,
+            actions: actions,
+            appearance: appearance ?? .default
+        )
         presenter?.present(config: config)
     }
 
@@ -44,15 +55,22 @@ public final class AlertHelper {
     /// - Parameters:
     ///   - title: 标题
     ///   - message: 描述
-    public func show(_ title: String?, message: String) {
-        let config = AlertConfiguration(title: title, message: message)
+    ///   - appearance: 外观配置
+    public func show(_ title: String?, message: String, appearance: AlertAppearance? = nil) {
+        let config = AlertConfiguration(
+            title: title,
+            message: message,
+            appearance: appearance ?? .default
+        )
         presenter?.present(config: config)
     }
 
     /// 展示 Alert（仅标题）
-    /// - Parameter title: 标题
-    public func show(_ title: String?) {
-        let config = AlertConfiguration(title: title)
+    /// - Parameters:
+    ///   - title: 标题
+    ///   - appearance: 外观配置
+    public func show(_ title: String?, appearance: AlertAppearance? = nil) {
+        let config = AlertConfiguration(title: title, appearance: appearance ?? .default)
         presenter?.present(config: config)
     }
 
@@ -64,19 +82,21 @@ public final class AlertHelper {
     ///   - message: 描述
     ///   - confirmTitle: 确认按钮标题
     ///   - cancelTitle: 取消按钮标题
+    ///   - appearance: 外观配置
     ///   - onConfirm: 确认回调
     public func showConfirm(
         _ title: String?,
         message: String? = nil,
         confirmTitle: String = "Confirm",
         cancelTitle: String = "Cancel",
+        appearance: AlertAppearance? = nil,
         onConfirm: @escaping () -> Void
     ) {
         let actions = [
             AlertAction(title: confirmTitle, handler: onConfirm),
             AlertAction(title: cancelTitle, role: .cancel)
         ]
-        show(title, message: message, actions: actions)
+        show(title, message: message, actions: actions, appearance: appearance)
     }
 
     /// 展示破坏性操作弹窗
@@ -85,25 +105,29 @@ public final class AlertHelper {
     ///   - message: 描述
     ///   - destructiveTitle: 破坏性按钮标题
     ///   - cancelTitle: 取消按钮标题
+    ///   - appearance: 外观配置
     ///   - onDestruct: 破坏性操作回调
     public func showDestructive(
         _ title: String?,
         message: String? = nil,
         destructiveTitle: String = "Delete",
         cancelTitle: String = "Cancel",
+        appearance: AlertAppearance? = nil,
         onDestruct: @escaping () -> Void
     ) {
         let actions = [
             AlertAction(title: destructiveTitle, role: .destructive, handler: onDestruct),
             AlertAction(title: cancelTitle, role: .cancel)
         ]
-        show(title, message: message, actions: actions)
+        show(title, message: message, actions: actions, appearance: appearance)
     }
 
     /// 展示错误弹窗
-    /// - Parameter error: 错误对象
-    public func showError(_ error: Error) {
-        show("Error", message: error.localizedDescription)
+    /// - Parameters:
+    ///   - error: 错误对象
+    ///   - appearance: 外观配置
+    public func showError(_ error: Error, appearance: AlertAppearance? = nil) {
+        show("Error", message: error.localizedDescription, appearance: appearance)
     }
 
     /// 隐藏 Alert
