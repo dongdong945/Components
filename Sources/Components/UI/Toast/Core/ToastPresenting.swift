@@ -19,6 +19,20 @@ public protocol ToastPresenting: AnyObject {
     func dismiss()
 }
 
+// MARK: - Toast Position
+
+/// Toast 显示位置
+public enum ToastPosition: Sendable, Equatable {
+    /// 顶部（offset 为距离顶部安全区的额外偏移，正值向下）
+    case top(offset: CGFloat = 0)
+
+    /// 居中（offset 为垂直方向偏移，正值向下）
+    case center(offset: CGFloat = 0)
+
+    /// 底部（offset 为距离底部安全区的额外偏移，正值向上）
+    case bottom(offset: CGFloat = 0)
+}
+
 // MARK: - Toast Configuration
 
 /// Toast 配置数据模型
@@ -31,17 +45,21 @@ public struct ToastConfiguration: Sendable {
     public let duration: TimeInterval
     /// Toast 外观配置
     public let appearance: ToastAppearance
+    /// Toast 显示位置
+    public let position: ToastPosition
 
     public init(
         type: ToastType = .info,
         title: String? = nil,
         duration: TimeInterval = 3.0,
-        appearance: ToastAppearance = .default
+        appearance: ToastAppearance = .default,
+        position: ToastPosition = .center()
     ) {
         self.type = type
         self.title = title
         self.duration = duration
         self.appearance = appearance
+        self.position = position
     }
 }
 

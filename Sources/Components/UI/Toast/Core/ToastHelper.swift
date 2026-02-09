@@ -36,60 +36,85 @@ public final class ToastHelper {
     // MARK: - LocalizedStringResource
 
     /// 显示加载状态提示
-    public func loading(_ title: LocalizedStringResource? = nil, appearance: ToastAppearance? = nil) {
+    public func loading(
+        _ title: LocalizedStringResource? = nil,
+        appearance: ToastAppearance? = nil,
+        position: ToastPosition = .center()
+    ) {
         let localizedTitle = title.map { String(localized: $0) }
         let config = ToastConfiguration(
             type: .loading,
             title: localizedTitle,
             duration: 0, // loading 不自动隐藏
-            appearance: appearance ?? .default
+            appearance: appearance ?? .default,
+            position: position
         )
         presenter?.present(config: config)
     }
 
     /// 显示信息提示
-    public func info(_ title: LocalizedStringResource, appearance: ToastAppearance? = nil) {
+    public func info(
+        _ title: LocalizedStringResource,
+        appearance: ToastAppearance? = nil,
+        position: ToastPosition = .center()
+    ) {
         let localizedTitle = String(localized: title)
         let config = ToastConfiguration(
             type: .info,
             title: localizedTitle,
             duration: 3.0,
-            appearance: appearance ?? .default
+            appearance: appearance ?? .default,
+            position: position
         )
         presenter?.present(config: config)
     }
 
     /// 显示成功提示
-    public func success(_ title: LocalizedStringResource, appearance: ToastAppearance? = nil) {
+    public func success(
+        _ title: LocalizedStringResource,
+        appearance: ToastAppearance? = nil,
+        position: ToastPosition = .center()
+    ) {
         let localizedTitle = String(localized: title)
         let config = ToastConfiguration(
             type: .success,
             title: localizedTitle,
             duration: 3.0,
-            appearance: appearance ?? .default
+            appearance: appearance ?? .default,
+            position: position
         )
         presenter?.present(config: config)
     }
 
     /// 显示错误提示
-    public func error(_ title: LocalizedStringResource, appearance: ToastAppearance? = nil) {
+    public func error(
+        _ title: LocalizedStringResource,
+        appearance: ToastAppearance? = nil,
+        position: ToastPosition = .center()
+    ) {
         let localizedTitle = String(localized: title)
         let config = ToastConfiguration(
             type: .error,
             title: localizedTitle,
             duration: 3.0,
-            appearance: appearance ?? .default
+            appearance: appearance ?? .default,
+            position: position
         )
         presenter?.present(config: config)
     }
 
     /// 显示错误提示
-    public func error(_ error: Error, appearance: ToastAppearance? = nil) {
+    public func error(
+        _ error: Error,
+        appearance: ToastAppearance? = nil,
+        position: ToastPosition = .center()
+    ) {
         let config = ToastConfiguration(
             type: .error,
             title: error.localizedDescription,
             duration: 3.0,
-            appearance: appearance ?? .default
+            appearance: appearance ?? .default,
+            position: position
         )
         presenter?.present(config: config)
     }
@@ -97,34 +122,52 @@ public final class ToastHelper {
     // MARK: - String
 
     /// 显示信息提示
-    public func info(verbatim title: String, appearance: ToastAppearance? = nil, duration: TimeInterval = 3.0) {
+    public func info(
+        verbatim title: String,
+        appearance: ToastAppearance? = nil,
+        duration: TimeInterval = 3.0,
+        position: ToastPosition = .center()
+    ) {
         let config = ToastConfiguration(
             type: .info,
             title: title,
             duration: duration,
-            appearance: appearance ?? .default
+            appearance: appearance ?? .default,
+            position: position
         )
         presenter?.present(config: config)
     }
 
     /// 显示成功提示
-    public func success(verbatim title: String, appearance: ToastAppearance? = nil, duration: TimeInterval = 3.0) {
+    public func success(
+        verbatim title: String,
+        appearance: ToastAppearance? = nil,
+        duration: TimeInterval = 3.0,
+        position: ToastPosition = .center()
+    ) {
         let config = ToastConfiguration(
             type: .success,
             title: title,
             duration: duration,
-            appearance: appearance ?? .default
+            appearance: appearance ?? .default,
+            position: position
         )
         presenter?.present(config: config)
     }
 
     /// 显示错误提示
-    public func error(verbatim title: String, appearance: ToastAppearance? = nil, duration: TimeInterval = 3.0) {
+    public func error(
+        verbatim title: String,
+        appearance: ToastAppearance? = nil,
+        duration: TimeInterval = 3.0,
+        position: ToastPosition = .center()
+    ) {
         let config = ToastConfiguration(
             type: .error,
             title: title,
             duration: duration,
-            appearance: appearance ?? .default
+            appearance: appearance ?? .default,
+            position: position
         )
         presenter?.present(config: config)
     }
