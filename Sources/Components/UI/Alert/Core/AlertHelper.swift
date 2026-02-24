@@ -74,6 +74,76 @@ public final class AlertHelper {
         presenter?.present(config: config)
     }
 
+    /// 展示 Alert（自定义标题 + 自定义按钮视图数组）
+    /// - Parameters:
+    ///   - title: 文本标题（自定义标题缺失时可回退）
+    ///   - message: 文本描述（自定义标题缺失时可回退）
+    ///   - appearance: 外观配置
+    ///   - customTitleView: 自定义标题视图
+    ///   - customMessageView: 自定义消息视图
+    ///   - customActionViews: 自定义按钮视图数组
+    public func show(
+        _ title: String? = nil,
+        message: String? = nil,
+        appearance: AlertAppearance? = nil,
+        customTitleView: AnyView? = nil,
+        customMessageView: AnyView? = nil,
+        customActionViews: [AnyView] = []
+    ) {
+        let config = AlertConfiguration(
+            title: title,
+            message: message,
+            customTitleView: customTitleView,
+            customMessageView: customMessageView,
+            customActionViews: customActionViews,
+            appearance: appearance ?? .default
+        )
+        presenter?.present(config: config)
+    }
+
+    /// 展示 Alert（ViewBuilder 版本的自定义标题 + 自定义按钮视图数组）
+    /// - Parameters:
+    ///   - title: 文本标题（自定义标题缺失时可回退）
+    ///   - message: 文本描述（自定义标题缺失时可回退）
+    ///   - appearance: 外观配置
+    ///   - titleView: 自定义标题视图构建器
+    ///   - messageView: 自定义消息视图构建器
+    ///   - customActionViews: 自定义按钮视图数组
+    public func show<TitleView: View, MessageView: View>(
+        _ title: String? = nil,
+        message: String? = nil,
+        appearance: AlertAppearance? = nil,
+        @ViewBuilder titleView: () -> TitleView,
+        @ViewBuilder messageView: () -> MessageView,
+        customActionViews: [AnyView] = []
+    ) {
+        show(
+            title,
+            message: message,
+            appearance: appearance,
+            customTitleView: AnyView(titleView()),
+            customMessageView: AnyView(messageView()),
+            customActionViews: customActionViews
+        )
+    }
+
+    /// 展示 Alert（仅自定义标题 + 自定义按钮视图数组）
+    public func show<TitleView: View>(
+        _ title: String? = nil,
+        message: String? = nil,
+        appearance: AlertAppearance? = nil,
+        @ViewBuilder titleView: () -> TitleView,
+        customActionViews: [AnyView] = []
+    ) {
+        show(
+            title,
+            message: message,
+            appearance: appearance,
+            customTitleView: AnyView(titleView()),
+            customActionViews: customActionViews
+        )
+    }
+
     // MARK: - Convenience API
 
     /// 展示确认/取消弹窗

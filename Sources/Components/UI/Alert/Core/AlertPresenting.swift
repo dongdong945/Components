@@ -124,6 +124,12 @@ public struct AlertConfiguration {
     public let title: String?
     /// 描述信息
     public let message: String?
+    /// 自定义标题视图（优先于 title/message 文本区）
+    public let customTitleView: AnyView?
+    /// 自定义消息视图（优先于 message 文本）
+    public let customMessageView: AnyView?
+    /// 自定义按钮视图数组（优先于 actions）
+    public let customActionViews: [AnyView]
     /// 按钮列表
     public let actions: [AlertAction]
     /// 外观配置
@@ -133,17 +139,26 @@ public struct AlertConfiguration {
     /// - Parameters:
     ///   - title: 标题
     ///   - message: 描述信息
+    ///   - customTitleView: 自定义标题视图
+    ///   - customMessageView: 自定义消息视图
+    ///   - customActionViews: 自定义按钮视图数组
     ///   - actions: 按钮列表，默认提供"确定"
     ///   - appearance: 外观配置
     @MainActor
     public init(
         title: String? = nil,
         message: String? = nil,
+        customTitleView: AnyView? = nil,
+        customMessageView: AnyView? = nil,
+        customActionViews: [AnyView] = [],
         actions: [AlertAction] = [],
         appearance: AlertAppearance = .default
     ) {
         self.title = title
         self.message = message
+        self.customTitleView = customTitleView
+        self.customMessageView = customMessageView
+        self.customActionViews = customActionViews
         self.actions = actions.isEmpty ? [.defaultOK()] : actions
         self.appearance = appearance
     }
