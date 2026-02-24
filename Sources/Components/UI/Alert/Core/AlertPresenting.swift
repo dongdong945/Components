@@ -128,8 +128,8 @@ public struct AlertConfiguration {
     public let customTitleView: AnyView?
     /// 自定义消息视图（优先于 message 文本）
     public let customMessageView: AnyView?
-    /// 自定义按钮视图数组（优先于 actions）
-    public let customActionViews: [AnyView]
+    /// 自定义按钮视图（优先于 actions）
+    public let customActionViews: AnyView?
     /// 按钮列表
     public let actions: [AlertAction]
     /// 外观配置
@@ -141,7 +141,7 @@ public struct AlertConfiguration {
     ///   - message: 描述信息
     ///   - customTitleView: 自定义标题视图
     ///   - customMessageView: 自定义消息视图
-    ///   - customActionViews: 自定义按钮视图数组
+    ///   - customActionViews: 自定义按钮视图
     ///   - actions: 按钮列表，默认提供"确定"
     ///   - appearance: 外观配置
     @MainActor
@@ -150,7 +150,7 @@ public struct AlertConfiguration {
         message: String? = nil,
         customTitleView: AnyView? = nil,
         customMessageView: AnyView? = nil,
-        customActionViews: [AnyView] = [],
+        customActionViews: AnyView? = nil,
         actions: [AlertAction] = [],
         appearance: AlertAppearance = .default
     ) {

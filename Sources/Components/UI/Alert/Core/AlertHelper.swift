@@ -74,21 +74,21 @@ public final class AlertHelper {
         presenter?.present(config: config)
     }
 
-    /// 展示 Alert（自定义标题 + 自定义按钮视图数组）
+    /// 展示 Alert（自定义标题 + 自定义按钮视图）
     /// - Parameters:
     ///   - title: 文本标题（自定义标题缺失时可回退）
     ///   - message: 文本描述（自定义标题缺失时可回退）
     ///   - appearance: 外观配置
     ///   - customTitleView: 自定义标题视图
     ///   - customMessageView: 自定义消息视图
-    ///   - customActionViews: 自定义按钮视图数组
+    ///   - customActionViews: 自定义按钮视图
     public func show(
         _ title: String? = nil,
         message: String? = nil,
         appearance: AlertAppearance? = nil,
         customTitleView: AnyView? = nil,
         customMessageView: AnyView? = nil,
-        customActionViews: [AnyView] = []
+        customActionViews: AnyView? = nil
     ) {
         let config = AlertConfiguration(
             title: title,
@@ -101,21 +101,21 @@ public final class AlertHelper {
         presenter?.present(config: config)
     }
 
-    /// 展示 Alert（ViewBuilder 版本的自定义标题 + 自定义按钮视图数组）
+    /// 展示 Alert（ViewBuilder 版本的自定义标题 + 自定义按钮视图）
     /// - Parameters:
     ///   - title: 文本标题（自定义标题缺失时可回退）
     ///   - message: 文本描述（自定义标题缺失时可回退）
     ///   - appearance: 外观配置
     ///   - titleView: 自定义标题视图构建器
     ///   - messageView: 自定义消息视图构建器
-    ///   - customActionViews: 自定义按钮视图数组
-    public func show<TitleView: View, MessageView: View>(
+    ///   - actionViews: 自定义按钮视图构建器
+    public func show<TitleView: View, MessageView: View, ActionViews: View>(
         _ title: String? = nil,
         message: String? = nil,
         appearance: AlertAppearance? = nil,
         @ViewBuilder titleView: () -> TitleView,
         @ViewBuilder messageView: () -> MessageView,
-        customActionViews: [AnyView] = []
+        @ViewBuilder actionViews: () -> ActionViews
     ) {
         show(
             title,
@@ -123,24 +123,39 @@ public final class AlertHelper {
             appearance: appearance,
             customTitleView: AnyView(titleView()),
             customMessageView: AnyView(messageView()),
-            customActionViews: customActionViews
+            customActionViews: AnyView(actionViews())
         )
     }
 
-    /// 展示 Alert（仅自定义标题 + 自定义按钮视图数组）
-    public func show<TitleView: View>(
+    /// 展示 Alert（仅自定义标题 + 自定义按钮视图）
+    public func show<TitleView: View, ActionViews: View>(
         _ title: String? = nil,
         message: String? = nil,
         appearance: AlertAppearance? = nil,
         @ViewBuilder titleView: () -> TitleView,
-        customActionViews: [AnyView] = []
+        @ViewBuilder actionViews: () -> ActionViews
     ) {
         show(
             title,
             message: message,
             appearance: appearance,
             customTitleView: AnyView(titleView()),
-            customActionViews: customActionViews
+            customActionViews: AnyView(actionViews())
+        )
+    }
+
+    /// 展示 Alert（标题/消息 + ViewBuilder 自定义按钮）
+    public func show<ActionViews: View>(
+        _ title: String? = nil,
+        message: String? = nil,
+        appearance: AlertAppearance? = nil,
+        @ViewBuilder actionViews: () -> ActionViews
+    ) {
+        show(
+            title,
+            message: message,
+            appearance: appearance,
+            customActionViews: AnyView(actionViews())
         )
     }
 
