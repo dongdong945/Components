@@ -103,6 +103,42 @@ public final class ToastHelper {
         presenter?.present(config: config)
     }
 
+    /// 显示警告提示
+    public func warning(
+        _ title: LocalizedStringResource,
+        appearance: ToastAppearance? = nil,
+        position: ToastPosition = .center()
+    ) {
+        let localizedTitle = String(localized: title)
+        let config = ToastConfiguration(
+            type: .warning,
+            title: localizedTitle,
+            duration: 3.0,
+            appearance: appearance ?? .default,
+            position: position
+        )
+        presenter?.present(config: config)
+    }
+
+    /// 显示自定义类型提示
+    public func custom(
+        _ title: LocalizedStringResource,
+        id: String,
+        appearance: ToastAppearance? = nil,
+        duration: TimeInterval = 3.0,
+        position: ToastPosition = .center()
+    ) {
+        let localizedTitle = String(localized: title)
+        let config = ToastConfiguration(
+            type: .custom(id),
+            title: localizedTitle,
+            duration: duration,
+            appearance: appearance ?? .default,
+            position: position
+        )
+        presenter?.present(config: config)
+    }
+
     /// 显示错误提示
     public func error(
         _ error: Error,
@@ -164,6 +200,41 @@ public final class ToastHelper {
     ) {
         let config = ToastConfiguration(
             type: .error,
+            title: title,
+            duration: duration,
+            appearance: appearance ?? .default,
+            position: position
+        )
+        presenter?.present(config: config)
+    }
+
+    /// 显示警告提示
+    public func warning(
+        verbatim title: String,
+        appearance: ToastAppearance? = nil,
+        duration: TimeInterval = 3.0,
+        position: ToastPosition = .center()
+    ) {
+        let config = ToastConfiguration(
+            type: .warning,
+            title: title,
+            duration: duration,
+            appearance: appearance ?? .default,
+            position: position
+        )
+        presenter?.present(config: config)
+    }
+
+    /// 显示自定义类型提示
+    public func custom(
+        verbatim title: String,
+        id: String,
+        appearance: ToastAppearance? = nil,
+        duration: TimeInterval = 3.0,
+        position: ToastPosition = .center()
+    ) {
+        let config = ToastConfiguration(
+            type: .custom(id),
             title: title,
             duration: duration,
             appearance: appearance ?? .default,

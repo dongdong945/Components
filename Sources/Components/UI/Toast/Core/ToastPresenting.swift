@@ -66,10 +66,12 @@ public struct ToastConfiguration: Sendable {
 // MARK: - Toast Type
 
 /// Toast 类型
-public enum ToastType: Sendable {
+public enum ToastType: Sendable, Equatable {
     case info // 信息提示
     case success // 成功提示
     case error // 错误提示
+    case warning // 警告提示
+    case custom(String) // 自定义类型（参数通常为 SF Symbol 名称）
     case loading // 加载中
 }
 
@@ -80,6 +82,8 @@ extension ToastType {
         case .info: return "exclamationmark.circle.fill"
         case .success: return "checkmark.circle.fill"
         case .error: return "xmark.circle.fill"
+        case .warning: return "exclamationmark.triangle.fill"
+        case let .custom(iconName): return iconName
         case .loading: return nil
         }
     }
@@ -90,6 +94,8 @@ extension ToastType {
         case .info: return Color("#FF9500") // iOS 标准橙色
         case .success: return Color("#34C759") // iOS 标准绿色
         case .error: return Color("#FF3B30") // iOS 标准红色
+        case .warning: return Color("#FFCC00") // iOS 标准黄色
+        case .custom: return nil
         case .loading: return nil
         }
     }
