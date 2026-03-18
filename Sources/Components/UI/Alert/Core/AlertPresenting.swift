@@ -52,6 +52,8 @@ public struct AlertAppearance: Sendable {
     public let backgroundColor: Color
     /// 容器圆角半径
     public let cornerRadius: CGFloat
+    /// Alert 整体垂直偏移量，正值向下，负值向上
+    public let offset: CGFloat
     /// 蒙层颜色
     public let dimmingColor: Color
     /// 按钮字体
@@ -74,6 +76,7 @@ public struct AlertAppearance: Sendable {
         messageColor: Color,
         backgroundColor: Color,
         cornerRadius: CGFloat,
+        offset: CGFloat = 0,
         dimmingColor: Color,
         buttonFont: Font,
         buttonHeight: CGFloat,
@@ -88,6 +91,7 @@ public struct AlertAppearance: Sendable {
         self.messageColor = messageColor
         self.backgroundColor = backgroundColor
         self.cornerRadius = cornerRadius
+        self.offset = offset
         self.dimmingColor = dimmingColor
         self.buttonFont = buttonFont
         self.buttonHeight = buttonHeight
@@ -106,6 +110,7 @@ public struct AlertAppearance: Sendable {
         messageColor: .secondary,
         backgroundColor: Color(.systemBackground),
         cornerRadius: 16,
+        offset: 0,
         dimmingColor: Color.black.opacity(0.7),
         buttonFont: .body.weight(.semibold),
         buttonHeight: 56,
