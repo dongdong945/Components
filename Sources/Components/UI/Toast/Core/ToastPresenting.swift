@@ -39,8 +39,10 @@ public enum ToastPosition: Sendable, Equatable {
 public struct ToastConfiguration: Sendable {
     /// Toast 类型
     public let type: ToastType
-    /// 标题文本
+    /// 纯文本标题
     public let title: String?
+    /// 富文本标题
+    public let attributedTitle: AttributedString?
     /// 自动隐藏时长
     public let duration: TimeInterval
     /// Toast 外观配置
@@ -51,12 +53,14 @@ public struct ToastConfiguration: Sendable {
     public init(
         type: ToastType = .info,
         title: String? = nil,
+        attributedTitle: AttributedString? = nil,
         duration: TimeInterval = 3.0,
         appearance: ToastAppearance = .default,
         position: ToastPosition = .center()
     ) {
         self.type = type
         self.title = title
+        self.attributedTitle = attributedTitle
         self.duration = duration
         self.appearance = appearance
         self.position = position

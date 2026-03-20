@@ -155,6 +155,104 @@ public final class ToastHelper {
         presenter?.present(config: config)
     }
 
+    // MARK: - AttributedString
+
+    public func loading(
+        attributed title: AttributedString? = nil,
+        appearance: ToastAppearance? = nil,
+        position: ToastPosition = .center()
+    ) {
+        let config = ToastConfiguration(
+            type: .loading,
+            attributedTitle: title,
+            duration: 0, // loading 不自动隐藏
+            appearance: appearance ?? .default,
+            position: position
+        )
+        presenter?.present(config: config)
+    }
+
+    public func info(
+        attributed title: AttributedString,
+        appearance: ToastAppearance? = nil,
+        duration: TimeInterval = 3.0,
+        position: ToastPosition = .center()
+    ) {
+        let config = ToastConfiguration(
+            type: .info,
+            attributedTitle: title,
+            duration: duration,
+            appearance: appearance ?? .default,
+            position: position
+        )
+        presenter?.present(config: config)
+    }
+
+    public func success(
+        attributed title: AttributedString,
+        appearance: ToastAppearance? = nil,
+        duration: TimeInterval = 3.0,
+        position: ToastPosition = .center()
+    ) {
+        let config = ToastConfiguration(
+            type: .success,
+            attributedTitle: title,
+            duration: duration,
+            appearance: appearance ?? .default,
+            position: position
+        )
+        presenter?.present(config: config)
+    }
+
+    public func error(
+        attributed title: AttributedString,
+        appearance: ToastAppearance? = nil,
+        duration: TimeInterval = 3.0,
+        position: ToastPosition = .center()
+    ) {
+        let config = ToastConfiguration(
+            type: .error,
+            attributedTitle: title,
+            duration: duration,
+            appearance: appearance ?? .default,
+            position: position
+        )
+        presenter?.present(config: config)
+    }
+
+    public func warning(
+        attributed title: AttributedString,
+        appearance: ToastAppearance? = nil,
+        duration: TimeInterval = 3.0,
+        position: ToastPosition = .center()
+    ) {
+        let config = ToastConfiguration(
+            type: .warning,
+            attributedTitle: title,
+            duration: duration,
+            appearance: appearance ?? .default,
+            position: position
+        )
+        presenter?.present(config: config)
+    }
+
+    public func custom(
+        attributed title: AttributedString,
+        id: String,
+        appearance: ToastAppearance? = nil,
+        duration: TimeInterval = 3.0,
+        position: ToastPosition = .center()
+    ) {
+        let config = ToastConfiguration(
+            type: .custom(id),
+            attributedTitle: title,
+            duration: duration,
+            appearance: appearance ?? .default,
+            position: position
+        )
+        presenter?.present(config: config)
+    }
+
     // MARK: - String
 
     /// 显示信息提示

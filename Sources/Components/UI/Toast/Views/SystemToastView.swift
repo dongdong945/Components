@@ -36,7 +36,11 @@ public struct SystemToastView: View {
             case .loading:
                 loadingView(appearance: config.appearance)
             default:
-                defaultView(title: config.title, appearance: config.appearance)
+                defaultView(
+                    title: config.title,
+                    attributedTitle: config.attributedTitle,
+                    appearance: config.appearance
+                )
             }
         }
         .padding()
@@ -54,8 +58,17 @@ public struct SystemToastView: View {
 
     /// 默认样式视图
     @ViewBuilder
-    private func defaultView(title: String?, appearance: ToastAppearance) -> some View {
-        if let title {
+    private func defaultView(
+        title: String?,
+        attributedTitle: AttributedString?,
+        appearance: ToastAppearance
+    ) -> some View {
+        if let attributedTitle {
+            Text(attributedTitle)
+                .font(appearance.titleFont)
+                .foregroundColor(appearance.titleColor)
+                .multilineTextAlignment(.center)
+        } else if let title {
             Text(title)
                 .font(appearance.titleFont)
                 .foregroundColor(appearance.titleColor)
