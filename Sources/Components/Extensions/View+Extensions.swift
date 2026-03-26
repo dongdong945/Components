@@ -20,11 +20,13 @@ extension View {
     }
 
     /// 将视图渲染为 UIImage
+    /// - Parameter opaque: 是否按不透明图像渲染，默认 false
     /// - Returns: 渲染后的图片，如果失败返回 nil
     @MainActor
-    public func asImage() -> UIImage? {
+    public func asImage(opaque: Bool = false) -> UIImage? {
         let renderer = ImageRenderer(content: self)
         renderer.scale = UIScreen.main.scale
+        renderer.isOpaque = opaque
         return renderer.uiImage
     }
 
