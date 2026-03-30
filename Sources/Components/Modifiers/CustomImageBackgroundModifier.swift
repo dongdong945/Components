@@ -14,6 +14,11 @@ public enum CustomImageBackgroundStyle: Sendable {
     case stretchyTop
 }
 
+public enum CustomImageBackgroundScaling: Sendable {
+    case fill
+    case fit
+}
+
 struct CustomImageBackgroundLayout: Equatable {
     let yOffset: CGFloat
     let extraHeight: CGFloat
@@ -57,6 +62,7 @@ struct CustomImageBackgroundLayer: View {
     let height: CGFloat?
     let fillColor: Color?
     let style: CustomImageBackgroundStyle
+    let scaling: CustomImageBackgroundScaling
     let scrollOffset: CGFloat
 
     @State
@@ -92,9 +98,9 @@ struct CustomImageBackgroundLayer: View {
                 .frame(width: width, height: height, alignment: .top)
                 .overlay(alignment: .top) {
                     backgroundView
-                        .frame(width: width, alignment: .top)
+                        .frame(width: width, height: height, alignment: .top)
                 }
-                .clipped()
+                .clipped(if: scaling == .fill)
         } else {
             backgroundView
                 .frame(width: width, alignment: .top)
@@ -122,14 +128,23 @@ struct CustomImageBackgroundLayer: View {
     private var backgroundView: some View {
         switch source {
         case .resource(let image):
-            Image(image)
-                .resizable()
-                .scaledToFill()
+            scaledImageView(Image(image).resizable())
         case .url(let url):
-            KFImage(url)
-                .placeholder { Color.clear }
-                .resizable()
-                .scaledToFill()
+            scaledImageView(
+                KFImage(url)
+                    .placeholder { Color.clear }
+                    .resizable()
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func scaledImageView<Content: View>(_ content: Content) -> some View {
+        switch scaling {
+        case .fill:
+            content.scaledToFill()
+        case .fit:
+            content.scaledToFit()
         }
     }
 }
@@ -139,6 +154,7 @@ struct CustomImageBackgroundContentModifier: ViewModifier {
     let height: CGFloat?
     let fillColor: Color?
     let style: CustomImageBackgroundStyle
+    let scaling: CustomImageBackgroundScaling
 
     @State
     private var scrollOffset: CGFloat = 0
@@ -152,6 +168,7 @@ struct CustomImageBackgroundContentModifier: ViewModifier {
                     height: height,
                     fillColor: fillColor,
                     style: style,
+                    scaling: scaling,
                     scrollOffset: scrollOffset
                 )
             }
@@ -173,29 +190,35 @@ public struct CustomImageBackgroundModifier: ViewModifier {
     public let fillColor: Color?
     /// 背景滚动样式
     public let style: CustomImageBackgroundStyle
+    /// 背景缩放方式
+    public let scaling: CustomImageBackgroundScaling
 
     public init(
         image: SwiftUI.ImageResource,
         height: CGFloat? = nil,
         fillColor: Color? = nil,
-        style: CustomImageBackgroundStyle = .fixed
+        style: CustomImageBackgroundStyle = .fixed,
+        scaling: CustomImageBackgroundScaling = .fill
     ) {
         source = .resource(image)
         self.height = height
         self.fillColor = fillColor
         self.style = style
+        self.scaling = scaling
     }
 
     public init(
         url: URL?,
         height: CGFloat? = nil,
         fillColor: Color? = nil,
-        style: CustomImageBackgroundStyle = .fixed
+        style: CustomImageBackgroundStyle = .fixed,
+        scaling: CustomImageBackgroundScaling = .fill
     ) {
         source = .url(url)
         self.height = height
         self.fillColor = fillColor
         self.style = style
+        self.scaling = scaling
     }
 
     public func body(content: Content) -> some View {
@@ -204,8 +227,20 @@ public struct CustomImageBackgroundModifier: ViewModifier {
                 source: source,
                 height: height,
                 fillColor: fillColor,
-                style: style
+                style: style,
+                scaling: scaling
             )
         )
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func clipped(if shouldClip: Bool) -> some View {
+        if shouldClip {
+            clipped()
+        } else {
+            self
+        }
     }
 }

@@ -48,17 +48,20 @@ extension View {
     ///   - height: 背景初始高度
     ///   - fillColor: 填充颜色
     ///   - style: 图片背景样式，默认 `.fixed`
+    ///   - scaling: 图片缩放方式，默认 `.fill`
     public func customImageBackground(
         image: SwiftUI.ImageResource,
         height: CGFloat? = nil,
         fillColor: Color? = nil,
-        style: CustomImageBackgroundStyle = .fixed
+        style: CustomImageBackgroundStyle = .fixed,
+        scaling: CustomImageBackgroundScaling = .fill
     ) -> some View {
         modifier(CustomImageBackgroundModifier(
             image: image,
             height: height,
             fillColor: fillColor,
-            style: style
+            style: style,
+            scaling: scaling
         ))
     }
 
@@ -68,17 +71,20 @@ extension View {
     ///   - height: 背景初始高度
     ///   - fillColor: 填充颜色
     ///   - style: 图片背景样式，默认 `.fixed`
+    ///   - scaling: 图片缩放方式，默认 `.fill`
     public func customImageBackground(
         url: URL?,
         height: CGFloat? = nil,
         fillColor: Color? = nil,
-        style: CustomImageBackgroundStyle = .fixed
+        style: CustomImageBackgroundStyle = .fixed,
+        scaling: CustomImageBackgroundScaling = .fill
     ) -> some View {
         modifier(CustomImageBackgroundModifier(
             url: url,
             height: height,
             fillColor: fillColor,
-            style: style
+            style: style,
+            scaling: scaling
         ))
     }
 
