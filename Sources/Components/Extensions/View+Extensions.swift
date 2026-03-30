@@ -45,15 +45,18 @@ extension View {
     /// 添加自定义图片背景（宽度填充、顶部对齐）
     /// - Parameters:
     ///   - image: 背景图片资源
+    ///   - height: 背景初始高度
     ///   - fillColor: 填充颜色
     ///   - style: 图片背景样式，默认 `.fixed`
     public func customImageBackground(
-        image: ImageResource,
-        fillColor: Color = .black,
+        image: SwiftUI.ImageResource,
+        height: CGFloat? = nil,
+        fillColor: Color? = nil,
         style: CustomImageBackgroundStyle = .fixed
     ) -> some View {
         modifier(CustomImageBackgroundModifier(
             image: image,
+            height: height,
             fillColor: fillColor,
             style: style
         ))
@@ -61,21 +64,22 @@ extension View {
 
     /// 添加自定义图片背景（宽度填充、顶部对齐）
     /// - Parameters:
+    ///   - url: 背景图片 URL
+    ///   - height: 背景初始高度
     ///   - fillColor: 填充颜色
     ///   - style: 图片背景样式，默认 `.fixed`
-    ///   - image: 背景内容视图
-    public func customImageBackground<BackgroundContent: View>(
-        fillColor: Color = .black,
-        style: CustomImageBackgroundStyle = .fixed,
-        @ViewBuilder image: () -> BackgroundContent
+    public func customImageBackground(
+        url: URL?,
+        height: CGFloat? = nil,
+        fillColor: Color? = nil,
+        style: CustomImageBackgroundStyle = .fixed
     ) -> some View {
-        modifier(
-            CustomImageBackgroundContentModifier(
-                fillColor: fillColor,
-                style: style,
-                backgroundContent: image()
-            )
-        )
+        modifier(CustomImageBackgroundModifier(
+            url: url,
+            height: height,
+            fillColor: fillColor,
+            style: style
+        ))
     }
 
     /// 添加自定义视频背景（宽度填充、顶部对齐）

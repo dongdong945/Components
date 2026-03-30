@@ -41,4 +41,16 @@ final class CustomImageBackgroundLayoutTests: XCTestCase {
             CustomImageBackgroundLayout(yOffset: 0, extraHeight: 36)
         )
     }
+
+    func testResolvedHeightKeepsBaseHeightForFixedStyle() {
+        let layout = CustomImageBackgroundLayout.make(style: .fixed, scrollOffset: 20)
+
+        XCTAssertEqual(layout.resolvedHeight(baseHeight: 280), 280)
+    }
+
+    func testResolvedHeightAddsPullDownDistanceForStretchyTop() {
+        let layout = CustomImageBackgroundLayout.make(style: .stretchyTop, scrollOffset: -52)
+
+        XCTAssertEqual(layout.resolvedHeight(baseHeight: 280), 332)
+    }
 }

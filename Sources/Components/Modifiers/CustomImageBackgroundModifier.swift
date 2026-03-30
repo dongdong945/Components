@@ -4,6 +4,7 @@
 //
 //  Created by DongDong on 01/08/26.
 //
+import Kingfisher
 import SwiftUI
 
 public enum CustomImageBackgroundStyle: Sendable {
@@ -32,6 +33,10 @@ struct CustomImageBackgroundLayout: Equatable {
             )
         }
     }
+
+    func resolvedHeight(baseHeight: CGFloat) -> CGFloat {
+        max(baseHeight + extraHeight, 0)
+    }
 }
 
 private struct CustomImageBackgroundHeightPreferenceKey: PreferenceKey {
@@ -42,11 +47,17 @@ private struct CustomImageBackgroundHeightPreferenceKey: PreferenceKey {
     }
 }
 
-struct CustomImageBackgroundLayer<BackgroundContent: View>: View {
-    let fillColor: Color
+enum CustomImageBackgroundSource {
+    case resource(SwiftUI.ImageResource)
+    case url(URL?)
+}
+
+struct CustomImageBackgroundLayer: View {
+    let source: CustomImageBackgroundSource
+    let height: CGFloat?
+    let fillColor: Color?
     let style: CustomImageBackgroundStyle
     let scrollOffset: CGFloat
-    let backgroundContent: BackgroundContent
 
     @State
     private var measuredHeight: CGFloat = 0
@@ -54,16 +65,20 @@ struct CustomImageBackgroundLayer<BackgroundContent: View>: View {
     var body: some View {
         GeometryReader { geometry in
             let layout = CustomImageBackgroundLayout.make(style: style, scrollOffset: scrollOffset)
+            let baseHeight = height ?? measuredHeight
+            let resolvedHeight = baseHeight > 0 ? layout.resolvedHeight(baseHeight: baseHeight) : nil
 
-            fillColor
+            (fillColor ?? .clear)
                 .overlay(alignment: .top) {
-                    visibleBackground(width: geometry.size.width, extraHeight: layout.extraHeight)
+                    visibleBackground(width: geometry.size.width, height: resolvedHeight)
                         .offset(y: layout.yOffset)
                 }
                 .overlay(alignment: .top) {
-                    measuredBackground(width: geometry.size.width)
-                        .hidden()
-                        .allowsHitTesting(false)
+                    if height == nil {
+                        measuredBackground(width: geometry.size.width)
+                            .hidden()
+                            .allowsHitTesting(false)
+                    }
                 }
                 .ignoresSafeArea()
         }
@@ -71,21 +86,19 @@ struct CustomImageBackgroundLayer<BackgroundContent: View>: View {
     }
 
     @ViewBuilder
-    private func visibleBackground(width: CGFloat, extraHeight: CGFloat) -> some View {
-        let height = max(measuredHeight + extraHeight, 0)
-
-        if measuredHeight > 0 {
-            backgroundContent
+    private func visibleBackground(width: CGFloat, height: CGFloat?) -> some View {
+        if let height {
+            backgroundView
                 .frame(width: width, height: height, alignment: .top)
                 .clipped()
         } else {
-            backgroundContent
+            backgroundView
                 .frame(width: width, alignment: .top)
         }
     }
 
     private func measuredBackground(width: CGFloat) -> some View {
-        backgroundContent
+        backgroundView
             .frame(width: width, alignment: .top)
             .fixedSize(horizontal: false, vertical: true)
             .background {
@@ -100,12 +113,28 @@ struct CustomImageBackgroundLayer<BackgroundContent: View>: View {
                 measuredHeight = newValue
             }
     }
+
+    @ViewBuilder
+    private var backgroundView: some View {
+        switch source {
+        case .resource(let image):
+            Image(image)
+                .resizable()
+                .scaledToFill()
+        case .url(let url):
+            KFImage(url)
+                .placeholder { Color.clear }
+                .resizable()
+                .scaledToFill()
+        }
+    }
 }
 
-struct CustomImageBackgroundContentModifier<BackgroundContent: View>: ViewModifier {
-    let fillColor: Color
+struct CustomImageBackgroundContentModifier: ViewModifier {
+    let source: CustomImageBackgroundSource
+    let height: CGFloat?
+    let fillColor: Color?
     let style: CustomImageBackgroundStyle
-    let backgroundContent: BackgroundContent
 
     @State
     private var scrollOffset: CGFloat = 0
@@ -115,10 +144,11 @@ struct CustomImageBackgroundContentModifier<BackgroundContent: View>: ViewModifi
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {
                 CustomImageBackgroundLayer(
+                    source: source,
+                    height: height,
                     fillColor: fillColor,
                     style: style,
-                    scrollOffset: scrollOffset,
-                    backgroundContent: backgroundContent
+                    scrollOffset: scrollOffset
                 )
             }
             .onScrollGeometryChange(for: CGFloat.self) { geometry in
@@ -131,19 +161,35 @@ struct CustomImageBackgroundContentModifier<BackgroundContent: View>: ViewModifi
 
 /// 图片背景修饰符：宽度填充、顶部对齐，并支持滚动行为样式
 public struct CustomImageBackgroundModifier: ViewModifier {
-    /// 背景图片资源
-    public let image: ImageResource
+    /// 背景图片来源
+    private let source: CustomImageBackgroundSource
+    /// 背景初始高度
+    public let height: CGFloat?
     /// 背景填充色
-    public let fillColor: Color
+    public let fillColor: Color?
     /// 背景滚动样式
     public let style: CustomImageBackgroundStyle
 
     public init(
-        image: ImageResource,
-        fillColor: Color = .black,
+        image: SwiftUI.ImageResource,
+        height: CGFloat? = nil,
+        fillColor: Color? = nil,
         style: CustomImageBackgroundStyle = .fixed
     ) {
-        self.image = image
+        source = .resource(image)
+        self.height = height
+        self.fillColor = fillColor
+        self.style = style
+    }
+
+    public init(
+        url: URL?,
+        height: CGFloat? = nil,
+        fillColor: Color? = nil,
+        style: CustomImageBackgroundStyle = .fixed
+    ) {
+        source = .url(url)
+        self.height = height
         self.fillColor = fillColor
         self.style = style
     }
@@ -151,11 +197,10 @@ public struct CustomImageBackgroundModifier: ViewModifier {
     public func body(content: Content) -> some View {
         content.modifier(
             CustomImageBackgroundContentModifier(
+                source: source,
+                height: height,
                 fillColor: fillColor,
-                style: style,
-                backgroundContent: Image(image)
-                    .resizable()
-                    .scaledToFill()
+                style: style
             )
         )
     }
