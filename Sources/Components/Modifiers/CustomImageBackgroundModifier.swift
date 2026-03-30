@@ -88,8 +88,12 @@ struct CustomImageBackgroundLayer: View {
     @ViewBuilder
     private func visibleBackground(width: CGFloat, height: CGFloat?) -> some View {
         if let height {
-            backgroundView
+            Color.clear
                 .frame(width: width, height: height, alignment: .top)
+                .overlay(alignment: .top) {
+                    backgroundView
+                        .frame(width: width, alignment: .top)
+                }
                 .clipped()
         } else {
             backgroundView
