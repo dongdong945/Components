@@ -59,6 +59,25 @@ extension View {
         ))
     }
 
+    /// 添加自定义图片背景（宽度填充、顶部对齐）
+    /// - Parameters:
+    ///   - fillColor: 填充颜色
+    ///   - style: 图片背景样式，默认 `.fixed`
+    ///   - image: 背景内容视图
+    public func customImageBackground<BackgroundContent: View>(
+        fillColor: Color = .black,
+        style: CustomImageBackgroundStyle = .fixed,
+        @ViewBuilder image: () -> BackgroundContent
+    ) -> some View {
+        modifier(
+            CustomImageBackgroundContentModifier(
+                fillColor: fillColor,
+                style: style,
+                backgroundContent: image()
+            )
+        )
+    }
+
     /// 添加自定义视频背景（宽度填充、顶部对齐）
     /// - Parameters:
     ///   - video: 视频文件名（不含扩展名）

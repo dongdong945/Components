@@ -34,39 +34,98 @@ struct CustomImageBackgroundLayout: Equatable {
     }
 }
 
-struct CustomImageBackgroundLayer: View {
-    let image: ImageResource
+private struct CustomImageBackgroundHeightPreferenceKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
+struct CustomImageBackgroundLayer<BackgroundContent: View>: View {
     let fillColor: Color
     let style: CustomImageBackgroundStyle
     let scrollOffset: CGFloat
+    let backgroundContent: BackgroundContent
+
+    @State
+    private var measuredHeight: CGFloat = 0
 
     var body: some View {
         GeometryReader { geometry in
             let layout = CustomImageBackgroundLayout.make(style: style, scrollOffset: scrollOffset)
-            let baseHeight = resolvedImageHeight(for: geometry.size.width)
 
             fillColor
                 .overlay(alignment: .top) {
-                    Image(image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(
-                            width: geometry.size.width,
-                            height: max(baseHeight + layout.extraHeight, 0),
-                            alignment: .top
-                        )
-                        .clipped()
+                    visibleBackground(width: geometry.size.width, extraHeight: layout.extraHeight)
                         .offset(y: layout.yOffset)
+                }
+                .overlay(alignment: .top) {
+                    measuredBackground(width: geometry.size.width)
+                        .hidden()
+                        .allowsHitTesting(false)
                 }
                 .ignoresSafeArea()
         }
         .ignoresSafeArea()
     }
 
-    private func resolvedImageHeight(for width: CGFloat) -> CGFloat {
-        let imageSize = UIImage(resource: image).size
-        let safeWidth = max(imageSize.width, 1)
-        return width * (imageSize.height / safeWidth)
+    @ViewBuilder
+    private func visibleBackground(width: CGFloat, extraHeight: CGFloat) -> some View {
+        let height = max(measuredHeight + extraHeight, 0)
+
+        if measuredHeight > 0 {
+            backgroundContent
+                .frame(width: width, height: height, alignment: .top)
+                .clipped()
+        } else {
+            backgroundContent
+                .frame(width: width, alignment: .top)
+        }
+    }
+
+    private func measuredBackground(width: CGFloat) -> some View {
+        backgroundContent
+            .frame(width: width, alignment: .top)
+            .fixedSize(horizontal: false, vertical: true)
+            .background {
+                GeometryReader { geometry in
+                    Color.clear.preference(
+                        key: CustomImageBackgroundHeightPreferenceKey.self,
+                        value: geometry.size.height
+                    )
+                }
+            }
+            .onPreferenceChange(CustomImageBackgroundHeightPreferenceKey.self) { newValue in
+                measuredHeight = newValue
+            }
+    }
+}
+
+struct CustomImageBackgroundContentModifier<BackgroundContent: View>: ViewModifier {
+    let fillColor: Color
+    let style: CustomImageBackgroundStyle
+    let backgroundContent: BackgroundContent
+
+    @State
+    private var scrollOffset: CGFloat = 0
+
+    func body(content: Content) -> some View {
+        content
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background {
+                CustomImageBackgroundLayer(
+                    fillColor: fillColor,
+                    style: style,
+                    scrollOffset: scrollOffset,
+                    backgroundContent: backgroundContent
+                )
+            }
+            .onScrollGeometryChange(for: CGFloat.self) { geometry in
+                geometry.contentOffset.y + geometry.contentInsets.top
+            } action: { _, newValue in
+                scrollOffset = newValue
+            }
     }
 }
 
@@ -79,9 +138,6 @@ public struct CustomImageBackgroundModifier: ViewModifier {
     /// 背景滚动样式
     public let style: CustomImageBackgroundStyle
 
-    @State
-    private var scrollOffset: CGFloat = 0
-
     public init(
         image: ImageResource,
         fillColor: Color = .black,
@@ -93,20 +149,14 @@ public struct CustomImageBackgroundModifier: ViewModifier {
     }
 
     public func body(content: Content) -> some View {
-        content
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background {
-                CustomImageBackgroundLayer(
-                    image: image,
-                    fillColor: fillColor,
-                    style: style,
-                    scrollOffset: scrollOffset
-                )
-            }
-            .onScrollGeometryChange(for: CGFloat.self) { geometry in
-                geometry.contentOffset.y + geometry.contentInsets.top
-            } action: { _, newValue in
-                scrollOffset = newValue
-            }
+        content.modifier(
+            CustomImageBackgroundContentModifier(
+                fillColor: fillColor,
+                style: style,
+                backgroundContent: Image(image)
+                    .resizable()
+                    .scaledToFill()
+            )
+        )
     }
 }
