@@ -46,13 +46,16 @@ extension View {
     /// - Parameters:
     ///   - image: 背景图片资源
     ///   - fillColor: 填充颜色
+    ///   - style: 图片背景样式，默认 `.fixed`
     public func customImageBackground(
         image: ImageResource,
-        fillColor: Color = .black
+        fillColor: Color = .black,
+        style: CustomImageBackgroundStyle = .fixed
     ) -> some View {
         modifier(CustomImageBackgroundModifier(
             image: image,
-            fillColor: fillColor
+            fillColor: fillColor,
+            style: style
         ))
     }
 
