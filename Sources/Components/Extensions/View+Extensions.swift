@@ -88,6 +88,26 @@ extension View {
         ))
     }
 
+    /// 添加自定义背景（宽度填充、顶部对齐）
+    /// - Parameters:
+    ///   - height: 背景初始高度
+    ///   - fillColor: 填充颜色
+    ///   - style: 背景样式，默认 `.fixed`
+    ///   - background: 背景内容
+    public func customBackground(
+        height: CGFloat? = nil,
+        fillColor: Color? = nil,
+        style: CustomBackgroundStyle = .fixed,
+        @ViewBuilder background: () -> some View
+    ) -> some View {
+        modifier(CustomBackgroundModifier(
+            height: height,
+            fillColor: fillColor,
+            style: style,
+            background: background
+        ))
+    }
+
     /// 添加自定义视频背景（宽度填充、顶部对齐）
     /// - Parameters:
     ///   - video: 视频文件名（不含扩展名）
